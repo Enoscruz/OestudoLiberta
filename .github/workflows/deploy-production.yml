@@ -1,0 +1,104 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type "deploy" to publish to Google Cloud
+        required: true
+        type: choice
+        options:
+          - cancel
+          - deploy
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main' && inputs.confirmation == 'deploy'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION }}
+      GCP_SQL_INSTANCE: ${{ vars.GCP_SQL_INSTANCE }}
+      GCP_DATABASE_NAME: ${{ vars.GCP_DATABASE_NAME }}
+      GCP_DATABASE_USER: ${{ vars.GCP_DATABASE_USER }}
+      GCP_ARTIFACT_REPOSITORY: ${{ vars.GCP_ARTIFACT_REPOSITORY }}
+      GCP_RUNTIME_SERVICE_ACCOUNT: ${{ vars.GCP_RUNTIME_SERVICE_ACCOUNT }}
+      GCP_ADMIN_BOOTSTRAP_EMAIL: ${{ vars.ADMIN_BOOTSTRAP_EMAIL }}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Require successful CI for this commit
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const result = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: "main",
+              event: "push",
+              status: "completed",
+              per_page: 100,
+            });
+            const passed = result.data.workflow_runs.some((run) =>
+              run.name === "CI" &&
+              run.head_sha === context.sha &&
+              run.conclusion === "success"
+            );
+            if (!passed) {
+              core.setFailed("A CI do commit selecionado precisa terminar com sucesso antes do deploy.");
+            }
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          required_vars=(
+            GCP_PROJECT_ID GCP_REGION GCP_SQL_INSTANCE GCP_DATABASE_NAME
+            GCP_DATABASE_USER GCP_ARTIFACT_REPOSITORY GCP_RUNTIME_SERVICE_ACCOUNT
+            NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_APP_ID
+            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+          )
+          for name in "${required_vars[@]}"; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing repository/environment variable: $name"
+              exit 1
+            fi
+          done
+      - name: Publish services
+        shell: pwsh
+        run: |
+          ./infrastructure/cloud/deploy.ps1 `
+            -ProjectId "$env:GCP_PROJECT_ID" `
+            -Region "$env:GCP_REGION" `
+            -SqlInstance "$env:GCP_SQL_INSTANCE" `
+            -DatabaseName "$env:GCP_DATABASE_NAME" `
+            -DatabaseUser "$env:GCP_DATABASE_USER" `
+            -ArtifactRepository "$env:GCP_ARTIFACT_REPOSITORY" `
+            -RuntimeServiceAccount "$env:GCP_RUNTIME_SERVICE_ACCOUNT" `
+            -AdminBootstrapEmail "$env:GCP_ADMIN_BOOTSTRAP_EMAIL" `
+            -ConfirmProjectId "$env:GCP_PROJECT_ID" `
+            -Apply

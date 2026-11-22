@@ -1,0 +1,25 @@
+# Ambiente e segredos — nunca entram na imagem
+.env
+.env.*
+secrets/
+
+# Ambientes virtuais e caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Testes (não são necessários em runtime)
+tests/
+
+# IDE / SO
+.idea/
+.vscode/
+.DS_Store

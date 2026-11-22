@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Techno-gótico — tokens do tema.
+
+   Paleta base (preto dominante + três tons de sangue):
+     #000000  void          #830000  blood-deep
+     #BC0202  blood         #FF0000  blood-bright
+
+   As escalas `brand` e `red` são reescritas para os tons de sangue e a escala
+   `slate` vira o neutro escuro do site. Assim os utilitários já usados nas
+   telas (`bg-brand-600`, `text-slate-600`, `border-slate-200`) passam a
+   renderizar a identidade nova sem precisar de alteração em cada componente.
+   ========================================================================== */
+@theme {
+  /* Tokens semânticos da identidade */
+  --color-void: #000000;
+  --color-blood-deep: #830000;
+  --color-blood: #bc0202;
+  --color-blood-bright: #ff0000;
+  /* Derivado do #FF0000, clareado para manter contraste de texto sobre preto. */
+  --color-ember: #ff4d4d;
+  --color-bone: #ede9e6;
+  --color-ash: #8f8783;
+
+  --color-surface: #0a0908;
+  --color-surface-2: #131010;
+  --color-line: #2a1414;
+
+  /* `brand` = sangue */
+  --color-brand-50: #1a0505;
+  --color-brand-100: #2b0808;
+  --color-brand-300: #830000;
+  --color-brand-500: #bc0202;
+  --color-brand-600: #bc0202;
+  --color-brand-700: #ff0000;
+
+  /* `red` = mesma família (alertas e erros) */
+  --color-red-50: #1a0505;
+  --color-red-100: #2b0808;
+  --color-red-200: #830000;
+  --color-red-600: #ff4d4d;
+  --color-red-800: #ffb3b3;
+
+  /* `slate` = neutro escuro (cinza frio levemente avermelhado) */
+  --color-slate-50: #0b0a0a;
+  --color-slate-100: #151212;
+  --color-slate-200: #2a2422;
+  --color-slate-300: #3d3733;
+  --color-slate-400: #6b6360;
+  --color-slate-500: #8f8783;
+  --color-slate-600: #b0a7a2;
+  --color-slate-700: #cbc2bd;
+  --color-slate-800: #e0d9d5;
+  --color-slate-900: #f2eeeb;
+  --color-slate-950: #060505;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-share-tech-mono);
+  --font-display: var(--font-cinzel);
+}
+
+/* ---------------------------------------------------------------------------
+   Base: fundo preto com brilho de sangue discreto e textura de scanlines.
+   --------------------------------------------------------------------------- */
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-bone);
+    background-image:
+      radial-gradient(
+        ellipse 80% 55% at 50% -10%,
+        color-mix(in srgb, var(--color-blood-deep) 35%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 100% 0%,
+        color-mix(in srgb, var(--color-blood) 12%, transparent),
+        transparent 65%
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.014) 0px,
+        rgba(255, 255, 255, 0.014) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: var(--color-blood);
+    color: var(--color-bone);
+  }
+
+  :focus-visible {
+    outline-color: var(--color-blood-bright);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilitários da identidade
+   --------------------------------------------------------------------------- */
+
+/** Brilho de sangue aplicado ao texto (títulos e destaques). */
+@utility text-glow {
+  text-shadow:
+    0 0 14px color-mix(in srgb, var(--color-blood-bright) 60%, transparent),
+    0 0 42px color-mix(in srgb, var(--color-blood-deep) 55%, transparent);
+}
+
+/** Cartão padrão: superfície escura com borda de sangue apagada. */
+@utility ritual-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.03) inset,
+    0 24px 48px -32px rgba(131, 0, 0, 0.9);
+}
+
+/** Etiqueta monoespaçada usada acima dos títulos ("eyebrow"). */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}

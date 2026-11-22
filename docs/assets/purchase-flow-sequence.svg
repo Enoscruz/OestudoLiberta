@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title description">
+  <title id="title">Sequência da compra e liberação de matrícula</title>
+  <desc id="description">Sequência de checkout entre frontend, FastAPI, PostgreSQL e Mercado Pago, seguida por webhook, idempotência, consulta do pagamento e atualização da matrícula.</desc>
+  <defs>
+    <marker id="call-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <marker id="return-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#555555"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555; }
+      .actor { font: 700 16px Arial, sans-serif; fill: #111; }
+      .actor-white { font: 700 16px Arial, sans-serif; fill: #fff; }
+      .step { font: 14px Arial, sans-serif; fill: #222; }
+      .number { font: 700 13px Arial, sans-serif; fill: #fff; }
+      .note { font: 13px Arial, sans-serif; fill: #444; }
+      .lane { fill: #fff; stroke: #d7d7d7; stroke-width: 1.5; }
+      .actor-box { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .actor-dark { fill: #111; stroke: #111; stroke-width: 2; }
+      .life { stroke: #bdbdbd; stroke-width: 1.5; stroke-dasharray: 5 7; }
+      .call { stroke: #830000; stroke-width: 2.2; marker-end: url(#call-arrow); }
+      .return { stroke: #555; stroke-width: 1.8; stroke-dasharray: 7 5; marker-end: url(#return-arrow); }
+      .badge { fill: #830000; }
+      .success { fill: #fff8f8; stroke: #bc0202; stroke-width: 1.5; }
+      .neutral { fill: #f4f4f4; stroke: #bdbdbd; stroke-width: 1.5; }
+      .strong { font: 700 14px Arial, sans-serif; fill: #830000; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1120" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Compra de curso | Sequência do webhook</text>
+  <text x="48" y="88" class="subtitle">O retorno do navegador não libera acesso; o status financeiro vem da consulta autenticada ao gateway</text>
+  <rect x="40" y="120" width="1520" height="800" rx="8" class="lane"/>
+
+  <rect x="75" y="145" width="180" height="68" rx="5" class="actor-dark"/>
+  <text x="95" y="186" class="actor-white">Aluno / Browser</text>
+  <rect x="365" y="145" width="180" height="68" rx="5" class="actor-box"/>
+  <text x="413" y="186" class="actor">Frontend</text>
+  <rect x="655" y="145" width="200" height="68" rx="5" class="actor-box"/>
+  <text x="705" y="186" class="actor">FastAPI</text>
+  <rect x="980" y="145" width="200" height="68" rx="5" class="actor-box"/>
+  <text x="1007" y="186" class="actor">PostgreSQL</text>
+  <rect x="1300" y="145" width="200" height="68" rx="5" class="actor-box"/>
+  <text x="1331" y="186" class="actor">Mercado Pago</text>
+
+  <path d="M165 213 V890 M455 213 V890 M755 213 V890 M1080 213 V890 M1400 213 V890" class="life"/>
+
+  <circle cx="86" cy="252" r="14" class="badge"/><text x="82" y="257" class="number">1</text>
+  <line x1="165" y1="252" x2="455" y2="252" class="call"/>
+  <text x="218" y="241" class="step">Seleciona “Comprar curso”</text>
+  <circle cx="86" cy="316" r="14" class="badge"/><text x="82" y="321" class="number">2</text>
+  <line x1="455" y1="316" x2="755" y2="316" class="call"/>
+  <text x="521" y="305" class="step">POST /purchases</text>
+  <circle cx="86" cy="380" r="14" class="badge"/><text x="82" y="385" class="number">3</text>
+  <line x1="755" y1="380" x2="1080" y2="380" class="call"/>
+  <text x="830" y="369" class="step">Cria purchase = PENDING</text>
+  <circle cx="86" cy="444" r="14" class="badge"/><text x="82" y="449" class="number">4</text>
+  <line x1="1080" y1="444" x2="755" y2="444" class="return"/>
+  <text x="854" y="433" class="step">purchase_id + total_amount</text>
+  <circle cx="86" cy="508" r="14" class="badge"/><text x="82" y="513" class="number">5</text>
+  <line x1="755" y1="508" x2="1400" y2="508" class="call"/>
+  <text x="943" y="497" class="step">Cria preferência com external_reference</text>
+  <circle cx="86" cy="572" r="14" class="badge"/><text x="82" y="577" class="number">6</text>
+  <line x1="755" y1="572" x2="455" y2="572" class="return"/>
+  <text x="526" y="561" class="step">init_point do checkout</text>
+  <circle cx="86" cy="636" r="14" class="badge"/><text x="82" y="641" class="number">7</text>
+  <line x1="455" y1="636" x2="1400" y2="636" class="call"/>
+  <text x="813" y="625" class="step">Checkout Pro · pagamento hospedado</text>
+  <circle cx="86" cy="700" r="14" class="badge"/><text x="82" y="705" class="number">8</text>
+  <line x1="1400" y1="700" x2="755" y2="700" class="call"/>
+  <text x="951" y="689" class="step">Webhook payment.updated</text>
+  <circle cx="86" cy="764" r="14" class="badge"/><text x="82" y="769" class="number">9</text>
+  <line x1="755" y1="764" x2="1080" y2="764" class="call"/>
+  <text x="817" y="753" class="step">Registra evento com chave única</text>
+  <circle cx="86" cy="828" r="14" class="badge"/><text x="82" y="833" class="number">10</text>
+  <line x1="755" y1="828" x2="1400" y2="828" class="call"/>
+  <text x="928" y="817" class="step">Reconsulta GET /v1/payments/{id}</text>
+  <circle cx="86" cy="884" r="14" class="badge"/><text x="82" y="889" class="number">11</text>
+  <line x1="1400" y1="884" x2="755" y2="884" class="return"/>
+  <text x="905" y="873" class="step">status · amount · external_reference oficiais</text>
+
+  <rect x="40" y="945" width="735" height="125" rx="6" class="success"/>
+  <text x="66" y="978" class="strong">APROVADO + VALOR CONFERIDO</text>
+  <text x="66" y="1007" class="note">Transação atualiza purchase/payment; cria ou reativa</text>
+  <text x="66" y="1032" class="note">enrollment vinculada à compra; grava resultado do evento.</text>
+  <rect x="825" y="945" width="735" height="125" rx="6" class="neutral"/>
+  <text x="851" y="978" class="strong">DUPLICADO · REJEITADO · DIVERGENTE · ESTORNADO</text>
+  <text x="851" y="1007" class="note">Idempotência impede reprocessamento. Divergência não libera acesso;</text>
+  <text x="851" y="1032" class="note">estorno/contestação revoga matrícula. HMAC usa secret configurado.</text>
+</svg>

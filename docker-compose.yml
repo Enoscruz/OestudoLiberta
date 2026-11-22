@@ -1,0 +1,86 @@
+# =========================================================================
+# OestudoLiberta — stack completa em containers (validação local)
+#
+# Sobe PostgreSQL + backend (FastAPI) + frontend (Next.js) na mesma rede.
+#
+# Subir:
+#   docker compose --env-file .env --env-file frontend/.env.local up --build
+#
+# Aplicar as migrações (uma vez, com o banco no ar):
+#   docker compose run --rm backend alembic upgrade head
+#
+# Parar:
+#   docker compose down        # preserva os dados (volume pgdata)
+#   docker compose down -v     # remove o volume do banco
+#
+# Somente o PostgreSQL (uso alternativo em dev, na porta 5433):
+#   docker compose up -d postgres
+#
+# As variáveis NEXT_PUBLIC_* vêm de frontend/.env.local — por isso os dois
+# arquivos de ambiente são passados via --env-file.
+# =========================================================================
+
+name: oestudo-liberta
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: oestudo_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-oestudo_liberta}
+      POSTGRES_USER: ${POSTGRES_USER:-oestudo_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    ports:
+      # 5433 no host para não conflitar com o PostgreSQL local (5432)
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-oestudo_app} -d ${POSTGRES_DB:-oestudo_liberta}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: oestudo_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Dentro da rede do compose o banco é o serviço "postgres", não localhost.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-oestudo_app}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-oestudo_liberta}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+    volumes:
+      # REPO_ROOT dentro da imagem é /app, então as credenciais do Firebase
+      # Admin precisam aparecer em /app/secrets.
+      - ./secrets:/app/secrets:ro
+    ports:
+      - "8000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+        NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY:-}
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:-}
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID:-}
+        NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:-}
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:-}
+        NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:-}
+    container_name: oestudo_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

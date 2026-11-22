@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1140" viewBox="0 0 1600 1140" role="img" aria-labelledby="title description">
+  <title id="title">Sequência de acesso à aula e persistência do progresso</title>
+  <desc id="description">O aluno valida matrícula, recebe playback assinado pela Cloudflare Stream e envia heartbeats periódicos para persistir o progresso no PostgreSQL.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <marker id="arrow-light" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#555555"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555555; }
+      .actor { font: 700 15px Arial, sans-serif; fill: #111111; }
+      .actor-white { font: 700 15px Arial, sans-serif; fill: #ffffff; }
+      .step { font: 13px Arial, sans-serif; fill: #222222; }
+      .number { font: 700 12px Arial, sans-serif; fill: #ffffff; }
+      .lane { fill: #ffffff; stroke: #d7d7d7; stroke-width: 1.5; }
+      .actor-box { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .actor-dark { fill: #111111; stroke: #111111; stroke-width: 2; }
+      .life { stroke: #bdbdbd; stroke-width: 1.5; stroke-dasharray: 5 7; }
+      .call { stroke: #830000; stroke-width: 2.1; marker-end: url(#arrow); }
+      .return { stroke: #555555; stroke-width: 1.7; stroke-dasharray: 7 5; marker-end: url(#arrow-light); }
+      .badge { fill: #830000; }
+      .note-box { fill: #fff8f8; stroke: #bc0202; stroke-width: 1.5; }
+      .note-title { font: 700 14px Arial, sans-serif; fill: #830000; }
+      .note-copy { font: 13px Arial, sans-serif; fill: #444444; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1140" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Aprendizagem | Playback e progresso</text>
+  <text x="48" y="88" class="subtitle">A API decide o acesso; o vídeo vai direto à Stream e o estado do aluno permanece no banco</text>
+  <rect x="40" y="120" width="1520" height="825" rx="8" class="lane"/>
+
+  <rect x="65" y="145" width="180" height="66" rx="5" class="actor-dark"/>
+  <text x="91" y="184" class="actor-white">Aluno / Player</text>
+  <rect x="355" y="145" width="180" height="66" rx="5" class="actor-box"/>
+  <text x="405" y="184" class="actor">Next.js</text>
+  <rect x="655" y="145" width="200" height="66" rx="5" class="actor-box"/>
+  <text x="704" y="184" class="actor">FastAPI</text>
+  <rect x="980" y="145" width="200" height="66" rx="5" class="actor-box"/>
+  <text x="1007" y="184" class="actor">PostgreSQL</text>
+  <rect x="1300" y="145" width="200" height="66" rx="5" class="actor-box"/>
+  <text x="1325" y="184" class="actor">Cloudflare Stream</text>
+
+  <path d="M155 211 V910 M445 211 V910 M755 211 V910 M1080 211 V910 M1400 211 V910" class="life"/>
+
+  <circle cx="85" cy="250" r="13" class="badge"/><text x="81" y="254" class="number">1</text>
+  <line x1="445" y1="250" x2="755" y2="250" class="call"/>
+  <text x="506" y="239" class="step">GET /me/courses/{id} + ID Token</text>
+
+  <circle cx="85" cy="310" r="13" class="badge"/><text x="81" y="314" class="number">2</text>
+  <line x1="755" y1="310" x2="1080" y2="310" class="call"/>
+  <text x="815" y="299" class="step">Confere enrollment ACTIVE</text>
+
+  <circle cx="85" cy="370" r="13" class="badge"/><text x="81" y="374" class="number">3</text>
+  <line x1="1080" y1="370" x2="755" y2="370" class="return"/>
+  <text x="831" y="359" class="step">Aulas PUBLISHED do curso</text>
+
+  <circle cx="85" cy="430" r="13" class="badge"/><text x="81" y="434" class="number">4</text>
+  <line x1="755" y1="430" x2="445" y2="430" class="return"/>
+  <text x="496" y="419" class="step">Curso e aulas sem video_uid</text>
+
+  <circle cx="85" cy="490" r="13" class="badge"/><text x="81" y="494" class="number">5</text>
+  <line x1="445" y1="490" x2="755" y2="490" class="call"/>
+  <text x="518" y="479" class="step">GET /me/lessons/{id}/playback</text>
+
+  <circle cx="85" cy="550" r="13" class="badge"/><text x="81" y="554" class="number">6</text>
+  <line x1="755" y1="550" x2="1080" y2="550" class="call"/>
+  <text x="813" y="539" class="step">Revalida matrícula e aula</text>
+
+  <circle cx="85" cy="610" r="13" class="badge"/><text x="81" y="614" class="number">7</text>
+  <line x1="755" y1="610" x2="1400" y2="610" class="call"/>
+  <text x="952" y="599" class="step">Emite token temporário</text>
+
+  <circle cx="85" cy="670" r="13" class="badge"/><text x="81" y="674" class="number">8</text>
+  <line x1="1400" y1="670" x2="755" y2="670" class="return"/>
+  <text x="949" y="659" class="step">URL assinada · validade de 1 hora</text>
+
+  <circle cx="85" cy="730" r="13" class="badge"/><text x="81" y="734" class="number">9</text>
+  <line x1="445" y1="730" x2="1400" y2="730" class="call"/>
+  <text x="822" y="719" class="step">Reprodução HLS direta · sem proxy no backend</text>
+
+  <circle cx="85" cy="790" r="13" class="badge"/><text x="81" y="794" class="number">10</text>
+  <line x1="445" y1="790" x2="755" y2="790" class="call"/>
+  <text x="527" y="779" class="step">Heartbeat a cada 15 s</text>
+
+  <circle cx="85" cy="850" r="13" class="badge"/><text x="81" y="854" class="number">11</text>
+  <line x1="755" y1="850" x2="1080" y2="850" class="call"/>
+  <text x="817" y="839" class="step">Upsert monotônico + conclusão única</text>
+
+  <rect x="40" y="970" width="735" height="120" rx="6" class="note-box"/>
+  <text x="66" y="1004" class="note-title">AUTORIZAÇÃO A CADA REQUISIÇÃO</text>
+  <text x="66" y="1032" class="note-copy">ID Token válido + e-mail verificado + matrícula ACTIVE.</text>
+  <text x="66" y="1057" class="note-copy">Course ID ou URL do player não concedem acesso sozinhos.</text>
+  <rect x="825" y="970" width="735" height="120" rx="6" class="note-box"/>
+  <text x="851" y="1004" class="note-title">ESTADO MONOTÔNICO</text>
+  <text x="851" y="1032" class="note-copy">A posição não regride; completed_at é gravado uma só vez.</text>
+  <text x="851" y="1057" class="note-copy">Percentual considera somente aulas publicadas.</text>
+</svg>

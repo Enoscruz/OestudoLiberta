@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Fluxo de observabilidade de uma requisição</title>
+  <desc id="description">Caminho de uma requisição do navegador por frontend, backend, banco e provedores, com logs, métricas, traces e alertas associados a um identificador de correlação.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <marker id="arrow-telemetry" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#555555"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555555; }
+      .node-title { font: 700 17px Arial, sans-serif; fill: #111111; }
+      .copy { font: 13px Arial, sans-serif; fill: #444444; }
+      .small { font: 12px Arial, sans-serif; fill: #555555; }
+      .lane { fill: #ffffff; stroke: #d7d7d7; stroke-width: 1.5; }
+      .red { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .neutral { fill: #fafafa; stroke: #bdbdbd; stroke-width: 1.5; }
+      .dark { fill: #111111; stroke: #111111; stroke-width: 1.5; }
+      .flow { fill: none; stroke: #830000; stroke-width: 2.5; marker-end: url(#arrow); }
+      .telemetry { fill: none; stroke: #555555; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-telemetry); }
+      .label { font: 12px Arial, sans-serif; fill: #830000; }
+      .white { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Operação | Observabilidade ponta a ponta</text>
+  <text x="48" y="88" class="subtitle">Correlacionar fluxo e dependências sem registrar tokens, senhas ou dados pessoais desnecessários</text>
+
+  <rect x="40" y="130" width="1520" height="365" rx="8" class="lane"/>
+  <text x="66" y="166" class="label">CAMINHO DE NEGÓCIO · TRACE_ID / REQUEST_ID ACOMPANHA A REQUISIÇÃO</text>
+
+  <rect x="70" y="220" width="225" height="130" rx="6" class="dark"/>
+  <text x="94" y="258" class="node-title white">Browser</text>
+  <text x="94" y="287" class="copy white">ação do aluno</text>
+  <text x="94" y="313" class="copy white">token apenas no header</text>
+
+  <rect x="365" y="220" width="225" height="130" rx="6" class="neutral"/>
+  <text x="389" y="258" class="node-title">Next.js</text>
+  <text x="389" y="287" class="copy">correlation ID</text>
+  <text x="389" y="313" class="copy">latência de página/API</text>
+
+  <rect x="660" y="220" width="255" height="130" rx="6" class="red"/>
+  <text x="684" y="258" class="node-title">FastAPI / Cloud Run</text>
+  <text x="684" y="287" class="copy">rotas · regras · adapters</text>
+  <text x="684" y="313" class="copy">logs estruturados + status</text>
+
+  <rect x="985" y="220" width="225" height="130" rx="6" class="neutral"/>
+  <text x="1009" y="258" class="node-title">Cloud SQL</text>
+  <text x="1009" y="287" class="copy">pool · queries</text>
+  <text x="1009" y="313" class="copy">erros e duração</text>
+
+  <rect x="1280" y="220" width="225" height="130" rx="6" class="neutral"/>
+  <text x="1304" y="258" class="node-title">Provedores</text>
+  <text x="1304" y="287" class="copy">Firebase · Mercado Pago</text>
+  <text x="1304" y="313" class="copy">Cloudflare Stream</text>
+
+  <path d="M295 285 H360" class="flow"/>
+  <path d="M590 285 H655" class="flow"/>
+  <path d="M915 285 H980" class="flow"/>
+  <path d="M790 350 V410 H1390 V350" class="flow"/>
+  <text x="307" y="269" class="label">HTTPS</text>
+  <text x="603" y="269" class="label">traceparent</text>
+  <text x="1010" y="306" class="label">SQL</text>
+  <text x="1048" y="405" class="label">chamadas externas</text>
+
+  <rect x="40" y="535" width="1520" height="305" rx="8" class="lane"/>
+  <text x="66" y="571" class="label">SINAIS OPERACIONAIS · AMBIENTE GCP PREVISTO</text>
+
+  <rect x="80" y="620" width="320" height="150" rx="6" class="neutral"/>
+  <text x="106" y="660" class="node-title">Logs estruturados</text>
+  <text x="106" y="690" class="copy">request_id · rota · resultado</text>
+  <text x="106" y="716" class="copy">sem tokens ou payloads sensíveis</text>
+  <text x="106" y="744" class="copy">Cloud Logging</text>
+
+  <rect x="465" y="620" width="320" height="150" rx="6" class="neutral"/>
+  <text x="491" y="660" class="node-title">Métricas e alertas</text>
+  <text x="491" y="690" class="copy">latência · taxa de erro · saturação</text>
+  <text x="491" y="716" class="copy">custo · saúde do banco</text>
+  <text x="491" y="744" class="copy">Cloud Monitoring</text>
+
+  <rect x="850" y="620" width="320" height="150" rx="6" class="neutral"/>
+  <text x="876" y="660" class="node-title">Traces distribuídos</text>
+  <text x="876" y="690" class="copy">API → SQL → provedor externo</text>
+  <text x="876" y="716" class="copy">amostragem e propagação de contexto</text>
+  <text x="876" y="744" class="copy">Cloud Trace</text>
+
+  <rect x="1235" y="620" width="285" height="150" rx="6" class="red"/>
+  <text x="1261" y="660" class="node-title">Resposta operacional</text>
+  <text x="1261" y="690" class="copy">alerta → investigação</text>
+  <text x="1261" y="716" class="copy">trace_id → causa → ação</text>
+  <text x="1261" y="744" class="copy">sem expor dados do aluno</text>
+
+  <path d="M790 350 V470 H240 V615" class="telemetry"/>
+  <path d="M790 470 H625 V615" class="telemetry"/>
+  <path d="M790 470 H1010 V615" class="telemetry"/>
+  <path d="M1010 770 V795 H1378 V770" class="telemetry"/>
+
+  <text x="66" y="815" class="small">Correlacionar logs e métricas pelo trace_id durante a investigação. Padrão previsto; recursos GCP não implantados.</text>
+</svg>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1160" viewBox="0 0 1440 1160" role="img" aria-labelledby="title description">
+  <title id="title">Decisões do processamento de pagamentos</title>
+  <desc id="description">Fluxograma de idempotência, validação de assinatura, reconsulta do pagamento, conferência de valor e referência e atualização da matrícula conforme o status oficial.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555555; }
+      .node-title { font: 700 16px Arial, sans-serif; fill: #111111; }
+      .copy { font: 13px Arial, sans-serif; fill: #444444; }
+      .branch { font: 700 12px Arial, sans-serif; fill: #830000; }
+      .lane { fill: #ffffff; stroke: #d7d7d7; stroke-width: 1.5; }
+      .node { fill: #fafafa; stroke: #bdbdbd; stroke-width: 1.5; }
+      .node-red { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .node-dark { fill: #111111; stroke: #111111; stroke-width: 1.5; }
+      .diamond { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .flow { fill: none; stroke: #830000; stroke-width: 2.2; marker-end: url(#arrow); }
+      .white { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1160" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Mercado Pago | Árvore de decisão do webhook</text>
+  <text x="48" y="88" class="subtitle">Uma notificação inicia a verificação; somente o estado confirmado no gateway muda o acesso</text>
+  <rect x="35" y="120" width="1370" height="985" rx="8" class="lane"/>
+
+  <rect x="510" y="150" width="420" height="72" rx="5" class="node-dark"/>
+  <text x="560" y="180" class="node-title white">Evento de pagamento recebido</text>
+  <text x="560" y="202" class="copy white">payment.updated · provider_event_id</text>
+  <path d="M720 222 V254" class="flow"/>
+
+  <polygon points="720,255 865,325 720,395 575,325" class="diamond"/>
+  <text x="652" y="319" class="node-title">Evento já</text>
+  <text x="637" y="341" class="node-title">processado?</text>
+
+  <path d="M575 325 H330" class="flow"/>
+  <text x="445" y="313" class="branch">SIM</text>
+  <rect x="80" y="280" width="250" height="92" rx="5" class="node"/>
+  <text x="105" y="316" class="node-title">Responder sem refazer</text>
+  <text x="105" y="344" class="copy">idempotência preservada</text>
+
+  <path d="M720 395 V432" class="flow"/>
+  <text x="735" y="420" class="branch">NÃO</text>
+  <rect x="510" y="438" width="420" height="94" rx="5" class="node-red"/>
+  <text x="548" y="475" class="node-title">Validar evento e consultar o gateway</text>
+  <text x="548" y="504" class="copy">HMAC configurado · GET /v1/payments/{id}</text>
+  <path d="M720 532 V570" class="flow"/>
+
+  <polygon points="720,570 890,650 720,730 550,650" class="diamond"/>
+  <text x="626" y="642" class="node-title">Referência, valor</text>
+  <text x="661" y="666" class="node-title">e moeda conferem?</text>
+
+  <path d="M890 650 H1090" class="flow"/>
+  <text x="960" y="638" class="branch">NÃO</text>
+  <rect x="1095" y="600" width="250" height="100" rx="5" class="node"/>
+  <text x="1121" y="638" class="node-title">Não conceder acesso</text>
+  <text x="1121" y="667" class="copy">Registrar divergência</text>
+
+  <path d="M720 730 V766" class="flow"/>
+  <text x="735" y="755" class="branch">SIM</text>
+  <polygon points="720,765 875,840 720,915 565,840" class="diamond"/>
+  <text x="648" y="833" class="node-title">Status oficial do</text>
+  <text x="668" y="856" class="node-title">pagamento?</text>
+
+  <path d="M565 840 H340 V965" class="flow"/>
+  <text x="435" y="828" class="branch">APPROVED</text>
+  <rect x="205" y="966" width="300" height="100" rx="5" class="node-red"/>
+  <text x="230" y="1004" class="node-title">Confirmar pagamento</text>
+  <text x="230" y="1033" class="copy">Ativar matrícula da compra</text>
+
+  <path d="M720 915 V966" class="flow"/>
+  <text x="735" y="947" class="branch">PENDING / REJECTED</text>
+  <rect x="570" y="966" width="300" height="100" rx="5" class="node"/>
+  <text x="595" y="1004" class="node-title">Sem nova matrícula</text>
+  <text x="595" y="1033" class="copy">Persistir status confirmado</text>
+
+  <path d="M875 840 H1100 V965" class="flow"/>
+  <text x="960" y="828" class="branch">REFUNDED / CHARGEBACK</text>
+  <rect x="960" y="966" width="350" height="100" rx="5" class="node-red"/>
+  <text x="985" y="1004" class="node-title">Revogar acesso</text>
+  <text x="985" y="1033" class="copy">Registrar estorno/contestação</text>
+
+  <text x="80" y="1090" class="copy">HMAC exige secret no ambiente. A consulta autenticada do pagamento continua sendo a fonte de verdade do estado financeiro.</text>
+</svg>

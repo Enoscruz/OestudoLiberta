@@ -1,0 +1,18 @@
+# Dependências e artefatos de build (reconstruídos dentro da imagem)
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Ambiente e segredos
+.env
+.env.*
+
+# Versionamento e ruído
+.git/
+.gitignore
+npm-debug.log*
+README.md
+.DS_Store

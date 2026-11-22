@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title description">
+  <title id="title">Progressão de engenharia de agentes aplicada ao OestudoLiberta</title>
+  <desc id="description">Comparação entre a plataforma transacional atual e duas possíveis etapas futuras de tutor com IA, destacando identidade, ferramentas, estado, guardrails e observabilidade.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555555; }
+      .eyebrow { font: 700 13px Arial, sans-serif; letter-spacing: 1.1px; fill: #830000; }
+      .card-title { font: 700 20px Arial, sans-serif; fill: #111111; }
+      .body { font: 14px Arial, sans-serif; fill: #333333; }
+      .small { font: 13px Arial, sans-serif; fill: #555555; }
+      .dark { fill: #111111; stroke: #111111; stroke-width: 1.5; }
+      .red { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .neutral { fill: #ffffff; stroke: #bdbdbd; stroke-width: 1.5; }
+      .flow { stroke: #830000; stroke-width: 2.4; marker-end: url(#arrow); }
+      .white { fill: #ffffff; }
+      .foot { font: 700 14px Arial, sans-serif; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="980" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Engenharia de agentes | Uma escada, não um atalho</text>
+  <text x="48" y="88" class="subtitle">A complexidade deve crescer ao redor de uma necessidade comprovada — não pelo número de agentes</text>
+
+  <rect x="40" y="130" width="480" height="650" rx="8" class="red"/>
+  <rect x="560" y="130" width="480" height="650" rx="8" class="neutral"/>
+  <rect x="1080" y="130" width="480" height="650" rx="8" class="neutral"/>
+
+  <text x="68" y="170" class="eyebrow">01 · PRODUTO ATUAL</text>
+  <text x="68" y="207" class="card-title">Plataforma determinística</text>
+  <text x="68" y="236" class="body">OestudoLiberta hoje</text>
+
+  <rect x="82" y="280" width="396" height="86" rx="5" class="dark"/>
+  <text x="105" y="315" class="card-title white">Next.js</text>
+  <text x="105" y="342" class="small white">identidade · interface · chamadas HTTP</text>
+  <line x1="280" y1="367" x2="280" y2="404" class="flow"/>
+  <rect x="82" y="410" width="396" height="102" rx="5" class="red"/>
+  <text x="105" y="447" class="card-title">FastAPI + serviços de domínio</text>
+  <text x="105" y="477" class="small">políticas explícitas · operações tipadas</text>
+  <line x1="280" y1="513" x2="280" y2="550" class="flow"/>
+  <rect x="82" y="556" width="396" height="104" rx="5" class="neutral"/>
+  <text x="105" y="593" class="card-title">PostgreSQL + provedores</text>
+  <text x="105" y="623" class="small">compras · matrículas · vídeos · progresso</text>
+  <text x="82" y="711" class="eyebrow">SEM LLM, RAG OU AGENTE EM PRODUÇÃO</text>
+
+  <text x="588" y="170" class="eyebrow">02 · FUTURO CONDICIONAL</text>
+  <text x="588" y="207" class="card-title">Um tutor com escopo limitado</text>
+  <text x="588" y="236" class="body">Primeiro passo se houver necessidade pedagógica</text>
+  <rect x="602" y="280" width="396" height="80" rx="5" class="neutral"/>
+  <text x="625" y="314" class="card-title">Orquestração de uma tarefa</text>
+  <text x="625" y="340" class="small">pergunta → resposta ou chamada de ferramenta</text>
+  <line x1="800" y1="361" x2="800" y2="396" class="flow"/>
+  <rect x="602" y="402" width="396" height="96" rx="5" class="neutral"/>
+  <text x="625" y="438" class="card-title">Ferramentas read-only</text>
+  <text x="625" y="468" class="small">catálogo e materiais publicados autorizados</text>
+  <line x1="800" y1="499" x2="800" y2="534" class="flow"/>
+  <rect x="602" y="540" width="396" height="104" rx="5" class="red"/>
+  <text x="625" y="576" class="card-title">Identidade e guardrails</text>
+  <text x="625" y="606" class="small">Firebase UID · memória isolada · sem mutações</text>
+  <text x="602" y="682" class="small">Avaliação: escopo, ambiguidade, privacidade e</text>
+  <text x="602" y="705" class="small">prompt injection; não apenas uma nota agregada.</text>
+
+  <text x="1108" y="170" class="eyebrow">03 · ESCALAR COM EVIDÊNCIA</text>
+  <text x="1108" y="207" class="card-title">Múltiplos agentes</text>
+  <text x="1108" y="236" class="body">Somente se tarefas forem independentes</text>
+  <rect x="1122" y="280" width="396" height="80" rx="5" class="dark"/>
+  <text x="1145" y="314" class="card-title white">Orquestrador previsível</text>
+  <text x="1145" y="340" class="small white">roteia por capacidade e autorização</text>
+  <line x1="1320" y1="361" x2="1320" y2="396" class="flow"/>
+  <rect x="1122" y="402" width="396" height="96" rx="5" class="neutral"/>
+  <text x="1145" y="438" class="card-title">Workers especializados</text>
+  <text x="1145" y="468" class="small">sem conversa livre entre workers</text>
+  <line x1="1320" y1="499" x2="1320" y2="534" class="flow"/>
+  <rect x="1122" y="540" width="396" height="104" rx="5" class="red"/>
+  <text x="1145" y="576" class="card-title">Estado compartilhado tipado</text>
+  <text x="1145" y="606" class="small">versionamento · retries limitados · auditável</text>
+  <text x="1122" y="682" class="small">Guardrails estreitos · traces por requisição ·</text>
+  <text x="1122" y="705" class="small">testes de integração e falha de dependências.</text>
+
+  <rect x="40" y="815" width="1520" height="105" rx="7" class="dark"/>
+  <text x="72" y="858" class="foot">Lições do artigo aplicadas ao projeto:</text>
+  <text x="72" y="889" class="small white">identidade correta · permissões mínimas · dependências previsíveis · estado isolado · testes de plumbing · observabilidade ponta a ponta</text>
+</svg>

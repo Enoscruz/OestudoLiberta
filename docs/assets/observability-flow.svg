@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="930" viewBox="0 0 1600 930" role="img" aria-labelledby="title description">
+  <title id="title">Observabilidade ponta a ponta do OestudoLiberta</title>
+  <desc id="description">Uma requisição percorre frontend, API, PostgreSQL e provedores. Logs, métricas e traces independentes são correlacionados para investigar incidentes.</desc>
+  <defs>
+    <marker id="request" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#830000"/>
+    </marker>
+    <marker id="signal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#555"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #000; }
+      .subtitle { font: 15px Arial, sans-serif; fill: #555; }
+      .label { font: 700 13px Arial, sans-serif; letter-spacing: .6px; fill: #830000; }
+      .node-title { font: 700 16px Arial, sans-serif; fill: #111; }
+      .copy { font: 13px Arial, sans-serif; fill: #444; }
+      .small { font: 12px Arial, sans-serif; fill: #555; }
+      .lane { fill: #fff; stroke: #d3d3d3; stroke-width: 1.5; }
+      .box { fill: #fafafa; stroke: #bdbdbd; stroke-width: 1.5; }
+      .box-red { fill: #fff8f8; stroke: #bc0202; stroke-width: 2; }
+      .box-dark { fill: #111; stroke: #111; stroke-width: 1.5; }
+      .white { fill: #fff; }
+      .request-line { fill: none; stroke: #830000; stroke-width: 2.2; marker-end: url(#request); }
+      .signal-line { fill: none; stroke: #555; stroke-width: 1.9; stroke-dasharray: 7 6; marker-end: url(#signal); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="930" fill="#f5f5f5"/>
+  <text x="48" y="58" class="title">Operação | Correlacionar, investigar, agir</text>
+  <text x="48" y="88" class="subtitle">Uma requisição distribuída deixa sinais independentes que se reencontram pelo trace_id</text>
+
+  <rect x="40" y="125" width="1520" height="360" rx="7" class="lane"/>
+  <text x="66" y="160" class="label">CAMINHO DE NEGÓCIO</text>
+
+  <rect x="70" y="210" width="220" height="115" rx="5" class="box-dark"/>
+  <text x="92" y="249" class="node-title white">Browser</text>
+  <text x="92" y="278" class="copy white">ação do aluno</text>
+  <text x="92" y="304" class="copy white">ID Token no header</text>
+  <rect x="360" y="210" width="220" height="115" rx="5" class="box"/>
+  <text x="382" y="249" class="node-title">Next.js</text>
+  <text x="382" y="278" class="copy">correlation ID</text>
+  <text x="382" y="304" class="copy">latência de página/API</text>
+  <rect x="650" y="210" width="250" height="115" rx="5" class="box-red"/>
+  <text x="672" y="249" class="node-title">FastAPI · Cloud Run</text>
+  <text x="672" y="278" class="copy">rotas · regras · adapters</text>
+  <text x="672" y="304" class="copy">logs estruturados · status</text>
+  <rect x="970" y="210" width="220" height="115" rx="5" class="box"/>
+  <text x="992" y="249" class="node-title">Cloud SQL</text>
+  <text x="992" y="278" class="copy">pool · queries</text>
+  <text x="992" y="304" class="copy">erros · duração</text>
+  <rect x="1260" y="210" width="245" height="115" rx="5" class="box"/>
+  <text x="1282" y="249" class="node-title">Provedores externos</text>
+  <text x="1282" y="278" class="copy">Firebase · Mercado Pago</text>
+  <text x="1282" y="304" class="copy">Cloudflare Stream</text>
+
+  <path d="M290 267 H355" class="request-line"/>
+  <path d="M580 267 H645" class="request-line"/>
+  <path d="M900 267 H965" class="request-line"/>
+  <path d="M775 325 V390 H1380 V330" class="request-line"/>
+  <text x="300" y="251" class="small">HTTPS</text>
+  <text x="590" y="251" class="small">traceparent</text>
+  <text x="920" y="251" class="small">SQL</text>
+  <text x="1050" y="384" class="small">chamadas com timeout e resultado registrado</text>
+
+  <rect x="40" y="520" width="1520" height="365" rx="7" class="lane"/>
+  <text x="66" y="556" class="label">SINAIS GCP PREVISTOS · NÃO ENCADEAR UMA CATEGORIA DENTRO DA OUTRA</text>
+
+  <rect x="90" y="600" width="390" height="140" rx="5" class="box"/>
+  <text x="116" y="640" class="node-title">Logs estruturados</text>
+  <text x="116" y="671" class="copy">trace_id · rota · resultado</text>
+  <text x="116" y="699" class="copy">sem token ou payload sensível</text>
+  <text x="116" y="724" class="copy">Cloud Logging</text>
+  <rect x="605" y="600" width="390" height="140" rx="5" class="box"/>
+  <text x="631" y="640" class="node-title">Métricas e alertas</text>
+  <text x="631" y="671" class="copy">latência · erros · saturação · custo</text>
+  <text x="631" y="699" class="copy">saúde do banco e dos serviços</text>
+  <text x="631" y="724" class="copy">Cloud Monitoring</text>
+  <rect x="1120" y="600" width="390" height="140" rx="5" class="box"/>
+  <text x="1146" y="640" class="node-title">Traces distribuídos</text>
+  <text x="1146" y="671" class="copy">API → SQL → provedor externo</text>
+  <text x="1146" y="699" class="copy">contexto e duração por dependência</text>
+  <text x="1146" y="724" class="copy">Cloud Trace</text>
+
+  <path d="M775 325 V470 H285 V595" class="signal-line"/>
+  <path d="M775 470 H800 V595" class="signal-line"/>
+  <path d="M775 470 H1315 V595" class="signal-line"/>
+
+  <rect x="400" y="785" width="800" height="72" rx="5" class="box-red"/>
+  <text x="432" y="815" class="node-title">Investigar pelo mesmo trace_id</text>
+  <text x="432" y="840" class="copy">Alerta inicia a triagem; logs e spans explicam causa, alcance e ação.</text>
+  <path d="M285 740 V765 H500 V780" class="signal-line"/>
+  <path d="M800 740 V780" class="signal-line"/>
+  <path d="M1315 740 V765 H1100 V780" class="signal-line"/>
+  <text x="66" y="873" class="small">Arquitetura operacional planejada para produção; Cloud Logging, Monitoring e Trace não estão implantados.</text>
+</svg>
